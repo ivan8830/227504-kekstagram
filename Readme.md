@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Иван Генеральчик](https://up.htmlacademy.ru/javascript/14/user/227504).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Юрченко](https://htmlacademy.ru/profile/id487085).
 
 ---
 
