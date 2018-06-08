@@ -63,33 +63,30 @@ var renderCards = function (arr) {
 
 	pictures.appendChild(fragment);
 	return pictures;
-};
+}
 
 renderCards(p);
 
 var userDialog = function (arr) {
 	var userWindow = document.querySelector('.big-picture');
-	userWindow.classList.remove('.hidden');
-	for (var i = 0; i < arr.length; i++) {
-		userWindow.querySelector('.big-picture__img').src = arr[i].url;
-		userWindow.querySelector('.likes-count').textContent = arr[i].likes;
-		userWindow.querySelector('.comments-count').textContent = arr[i].comments.length;
-		var commentsCard = userWindow.querySelector('.social__comments');
-		var listCard = makeElement('li', '.social__comment');
-		listCard.classList.add('.social__comment--text')
-		var imageCard = makeElement('img', '.social__picture');
-		imageCard.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
-		imageCard.alt = 'Аватар комментатора фотографии';
-		imageCard.width = '35';
-		imageCard.height = '35';
-		imageCard.textContent = arr[i].comments;
-		listCard.appendChild(imageCard);
-		commentsCard.appendChild(listCard);
-		userWindow.querySelector('.social__caption').textContent = arr[i].description;
-		userWindow.querySelector('.social__comment-count').classList.add('.visually-hidden'); 
-		userWindow.querySelector('.social__loadmore').classList.add('.visually-hidden');
-	}
-	
+	userWindow.classList.remove('hidden');
+	userWindow.querySelector('.big-picture__img').src = arr[0].url;
+	userWindow.querySelector('.likes-count').textContent = arr[0].likes;
+	userWindow.querySelector('.comments-count').textContent = arr[0].comments.length;
+	var commentsCard = userWindow.querySelector('.social__comments');
+	var listCard = makeElement('li', 'social__comment');
+	listCard.classList.add('social__comment--text')
+	var imageCard = makeElement('img', 'social__picture');
+	imageCard.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+	imageCard.alt = 'Аватар комментатора фотографии';
+	imageCard.width = '35';
+	imageCard.height = '35';
+	imageCard.textContent = arr[0].comments;
+	listCard.appendChild(imageCard);
+	commentsCard.appendChild(listCard);
+	userWindow.querySelector('.social__caption').textContent = arr[0].description;
+	userWindow.querySelector('.social__comment-count').classList.add('visually-hidden'); 
+	userWindow.querySelector('.social__loadmore').classList.add('visually-hidden');
 	return userWindow;
 };
 
