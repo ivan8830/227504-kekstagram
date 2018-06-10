@@ -35,13 +35,7 @@ var makeElement = function (tagName, className) {
 };
 
 var generateComments = function () {
-  var comment = [];
-  var limit = getRandomNumber(1, 2);
-
-  for (var i = 0; i < limit; i++) {
-    comment.push(getRandomValue(comments));
-  }
-  return comment;
+  return comments[getRandomValue(comments)];
 };
 
 var generateArray = function (size, generator) {
@@ -88,20 +82,25 @@ var showDialogUser = function (data) {
   userWindow.querySelector('.comments-count').textContent = data.comments.length;
 
   var commentsCard = userWindow.querySelector('.social__comments');
-  var listCard = makeElement('li', 'social__comment');
+  commentsCard.innerHTML = '';
 
-  listCard.classList.add('social__comment--text');
+  for (var i = 0; i < data.comments.length; i++) {
+    var listCard = makeElement('li', 'social__comment');
 
-  var imageCard = makeElement('img', 'social__picture');
+    listCard.classList.add('social__comment--text');
 
-  imageCard.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
-  imageCard.alt = 'Аватар комментатора фотографии';
-  imageCard.width = '35';
-  imageCard.height = '35';
-  imageCard.textContent = data.comments;
+    var imageCard = makeElement('img', 'social__picture');
 
-  listCard.appendChild(imageCard);
-  commentsCard.appendChild(listCard);
+    imageCard.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+    imageCard.alt = 'Аватар комментатора фотографии';
+    imageCard.width = '35';
+    imageCard.height = '35';
+    imageCard.textContent = data.comments[i];
+
+    listCard.appendChild(imageCard);
+    commentsCard.appendChild(listCard);
+  }
+
   userWindow.querySelector('.social__caption').textContent = data.description;
   userWindow.querySelector('.social__comment-count').classList.add('visually-hidden');
   userWindow.querySelector('.social__loadmore').classList.add('visually-hidden');
@@ -112,3 +111,4 @@ var showDialogUser = function (data) {
 var users = generateArray(25, generateData);
 renderCards(users);
 showDialogUser(users[0]);
+console.log(users);
