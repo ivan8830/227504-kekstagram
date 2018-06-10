@@ -28,12 +28,6 @@ var getRandomValue = function (arr) {
   return Math.floor(Math.random() * arr.length);
 };
 
-var makeElement = function (tagName, className) {
-  var element = document.createElement(tagName);
-  element.classList.add(className);
-  return element;
-};
-
 var generateComments = function () {
   return comments[getRandomValue(comments)];
 };
@@ -82,25 +76,17 @@ var showDialogUser = function (data) {
   userWindow.querySelector('.comments-count').textContent = data.comments.length;
 
   var commentsCard = userWindow.querySelector('.social__comments');
-  commentsCard.innerHTML = '';
+  var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < data.comments.length; i++) {
-    var listCard = makeElement('li', 'social__comment');
-
-    listCard.classList.add('social__comment--text');
-
-    var imageCard = makeElement('img', 'social__picture');
-
-    imageCard.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
-    imageCard.alt = 'Аватар комментатора фотографии';
-    imageCard.width = '35';
-    imageCard.height = '35';
-    imageCard.textContent = data.comments[i];
-
-    listCard.appendChild(imageCard);
-    commentsCard.appendChild(listCard);
+    var el = commentsCard.children[0].cloneNode(true);
+    el.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+    el.querySelector('.social__text').innerText = data.comments[i];
+    fragment.appendChild(el);
   }
 
+  commentsCard.innerHTML = '';
+  commentsCard.appendChild(fragment);
   userWindow.querySelector('.social__caption').textContent = data.description;
   userWindow.querySelector('.social__comment-count').classList.add('visually-hidden');
   userWindow.querySelector('.social__loadmore').classList.add('visually-hidden');
@@ -111,4 +97,3 @@ var showDialogUser = function (data) {
 var users = generateArray(25, generateData);
 renderCards(users);
 showDialogUser(users[0]);
-console.log(users);
