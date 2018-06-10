@@ -56,7 +56,7 @@ var generateData = function (i) {
   return {
     url: 'photos/' + (i + 1) + '.jpg',
     likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-    comments: generateComments(),
+    comments: generateArray(getRandomNumber(1, 2), generateComments),
     description: description[getRandomValue(description)]
   };
 };
