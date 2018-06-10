@@ -44,7 +44,7 @@ var generateComments = function () {
   return comment;
 };
 
-var generateCards = function (size, generator) {
+var generateArray = function (size, generator) {
   var cards = [];
   for (var i = 0; i < size; i++) {
     cards.push(generator(i));
@@ -53,13 +53,12 @@ var generateCards = function (size, generator) {
 };
 
 var generateData = function (i) {
-  i = {
+  return {
     url: 'photos/' + (i + 1) + '.jpg',
     likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
     comments: generateComments(),
     description: description[getRandomValue(description)]
   };
-  return i;
 };
 
 var renderCards = function (arr) {
@@ -110,6 +109,6 @@ var showDialogUser = function (data) {
   return userWindow;
 };
 
-var users = generateCards(25, generateData);
+var users = generateArray(25, generateData);
 renderCards(users);
 showDialogUser(users[0]);
