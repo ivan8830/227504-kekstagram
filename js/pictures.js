@@ -2,6 +2,8 @@
 
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var comments = [
   'Всё отлично!',
@@ -57,6 +59,7 @@ var renderCards = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     var picturesElement = pictureTemplate.cloneNode(true);
     picturesElement.querySelector('.picture__img').src = arr[i].url;
+    picturesElement.querySelector('.picture__img').tabindex = 0;
     picturesElement.querySelector('.picture__stat--likes').textContent = arr[i].likes;
     picturesElement.querySelector('.picture__stat--comments').textContent = arr[i].comments.length;
     fragment.appendChild(picturesElement);
@@ -68,7 +71,6 @@ var renderCards = function (arr) {
 };
 
 var showDialogUser = function (data) {
-  var userWindow = document.querySelector('.big-picture');
   userWindow.classList.remove('hidden');
 
   userWindow.querySelector('.big-picture__img').src = data.url;
@@ -94,6 +96,48 @@ var showDialogUser = function (data) {
   return userWindow;
 };
 
+var userWindow = document.querySelector('.big-picture');
+var closeWindow = document.querySelector('.big-picture__cancel');
+var modalOpen = document.querySelector('Body');
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var openPopup = function () {
+  userWindow.classList.remove('hidden');
+  modalOpen.classList.add('modal-open');
+  showDialogUser(users[0]);
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  userWindow.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
 var users = generateArray(25, generateData);
 renderCards(users);
-showDialogUser(users[0]);
+
+var openWindow = document.querySelector('.pictures');
+openWindow.addEventListener('click', function () {
+  openPopup();
+});
+
+openWindow.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
+closeWindow.addEventListener('click', function () {
+  closePopup();
+});
+
+closeWindow.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
