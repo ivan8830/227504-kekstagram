@@ -4,6 +4,8 @@ var LIKES_MIN = 15;
 var LIKES_MAX = 200;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var STEP_PLUS = 25;
+var STEP_MINUS = 25;
 
 var comments = [
   'Всё отлично!',
@@ -98,7 +100,7 @@ var showDialogUser = function (data) {
 
 var userWindow = document.querySelector('.big-picture');
 var closeWindow = document.querySelector('.big-picture__cancel');
-var modalOpen = document.querySelector('Body');
+var modalOpen = document.querySelector('body');
 
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -115,15 +117,15 @@ var openPopup = function () {
 
 var closePopup = function () {
   userWindow.classList.add('hidden');
+  imgUpload.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-var users = generateArray(25, generateData);
-renderCards(users);
-
 var openWindow = document.querySelector('.pictures');
-openWindow.addEventListener('click', function () {
-  openPopup();
+openWindow.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('picture__img')) {
+    openPopup();
+  }
 });
 
 openWindow.addEventListener('keydown', function (evt) {
@@ -141,3 +143,100 @@ closeWindow.addEventListener('keydown', function (evt) {
     closePopup();
   }
 });
+
+var uploadFile = document.querySelector('#upload-file');
+var imgUpload = document.querySelector('.img-upload__overlay');
+uploadFile.addEventListener('change', function () {
+  openPopapEdit();
+});
+
+var openPopapEdit = function () {
+  imgUpload.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var buttonCancel = document.querySelector('#upload-cancel');
+buttonCancel.addEventListener('click', function () {
+  closePopup();
+});
+buttonCancel.addEventListener('keydown', onPopupEscPress);
+
+var resize = document.querySelector('.img-upload__resize');
+var resizePlus = resize.querySelector('.resize__control--plus');
+var resizeMinus = resize.querySelector('.resize__control--minus');
+var resizeValue = resize.querySelector('.resize__control--value');
+var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+
+resizePlus.addEventListener('click', function () {
+  resizeValue.value = parseInt(resizeValue.value, 10) === 105 ? parseInt(resizeValue.value, 10) + '%' : (parseInt(resizeValue.value, 10) + STEP_PLUS) + '%';
+  imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+});
+
+resizeMinus.addEventListener('click', function () {
+  resizeValue.value = parseInt(resizeValue.value, 10) === 5 ? parseInt(resizeValue.value, 10) + '%' : (parseInt(resizeValue.value, 10) - STEP_MINUS) + '%';
+  imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+});
+
+var effectOrigin = imgUpload.querySelector('#effect-none');
+var effectChrom = imgUpload.querySelector('#effect-chrome');
+var effectSepia = imgUpload.querySelector('#effect-sepia');
+var effectMarvin = imgUpload.querySelector('#effect-marvin');
+var effectPhobos = imgUpload.querySelector('#effect-phobos');
+var effectHeat = imgUpload.querySelector('#effect-heat');
+
+effectOrigin.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--chrome', false);
+  imgUploadPreview.classList.toggle('effects__preview--sepia', false);
+  imgUploadPreview.classList.toggle('effects__preview--marvin', false);
+  imgUploadPreview.classList.toggle('effects__preview--phobos', false);
+  imgUploadPreview.classList.toggle('effects__preview--heat', false);
+  imgUploadPreview.classList.add('effects__preview--none');
+});
+
+effectChrom.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--none', false);
+  imgUploadPreview.classList.toggle('effects__preview--sepia', false);
+  imgUploadPreview.classList.toggle('effects__preview--marvin', false);
+  imgUploadPreview.classList.toggle('effects__preview--phobos', false);
+  imgUploadPreview.classList.toggle('effects__preview--heat', false);
+  imgUploadPreview.classList.add('effects__preview--chrome');
+});
+
+effectSepia.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--none', false);
+  imgUploadPreview.classList.toggle('effects__preview--chrome', false);
+  imgUploadPreview.classList.toggle('effects__preview--marvin', false);
+  imgUploadPreview.classList.toggle('effects__preview--phobos', false);
+  imgUploadPreview.classList.toggle('effects__preview--heat', false);
+  imgUploadPreview.classList.add('effects__preview--sepia');
+});
+
+effectMarvin.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--none', false);
+  imgUploadPreview.classList.toggle('effects__preview--chrome', false);
+  imgUploadPreview.classList.toggle('effects__preview--sepia', false);
+  imgUploadPreview.classList.toggle('effects__preview--phobos', false);
+  imgUploadPreview.classList.toggle('effects__preview--heat', false);
+  imgUploadPreview.classList.add('effects__preview--marvin');
+});
+
+effectPhobos.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--none', false);
+  imgUploadPreview.classList.toggle('effects__preview--chrome', false);
+  imgUploadPreview.classList.toggle('effects__preview--sepia', false);
+  imgUploadPreview.classList.toggle('effects__preview--marvin', false);
+  imgUploadPreview.classList.toggle('effects__preview--heat', false);
+  imgUploadPreview.classList.add('effects__preview--phobos');
+});
+
+effectHeat.addEventListener('click', function () {
+  imgUploadPreview.classList.toggle('effects__preview--none', false);
+  imgUploadPreview.classList.toggle('effects__preview--chrome', false);
+  imgUploadPreview.classList.toggle('effects__preview--sepia', false);
+  imgUploadPreview.classList.toggle('effects__preview--marvin', false);
+  imgUploadPreview.classList.toggle('effects__preview--phobos', false);
+  imgUploadPreview.classList.add('effects__preview--heat');
+});
+
+var users = generateArray(25, generateData);
+renderCards(users);
