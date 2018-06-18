@@ -231,15 +231,28 @@ effectHeat.addEventListener('click', function () {
 
 var hashTeg = imgUpload.querySelector('.text__hashtags');
 
-hashTeg.addEventListener('input', function () {
-  var tagText = hashTeg.value;
-  var arr = tagText.split(' ');
-
+var withUniq = function (arr) {
+  var result = [];
   for (var i = 0; i < arr.length; i++) {
-    var arrElement = arr[i];
-    arrElement.toLowerCase();
+    var str = arr[i];
+    for (var j = 0; j < arr.length; i++) {
+      if (result[j] === str) {
+        return false;
+      }
+      result.push(str);
+    }
+  }
+  return true;
+};
 
-    if (arr[i - 1] === arrElement) {
+hashTeg.addEventListener('input', function () {
+  var tagText = hashTeg.value.split(' ');
+  var result = withUniq(tagText);
+
+  for (var i = 0; i < tagText.length; i++) {
+    var arrElement = tagText[i];
+    arrElement.toLowerCase();
+    if (!result) {
       hashTeg.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
       break;
     }
