@@ -232,17 +232,19 @@ effectHeat.addEventListener('click', function () {
 var hashTeg = imgUpload.querySelector('.text__hashtags');
 
 var withUniq = function (arr) {
-  var result = [];
   for (var i = 0; i < arr.length; i++) {
     var str = arr[i];
-    for (var j = 0; j < arr.length; i++) {
-      if (result[j] === str) {
+    for (var j = 0; j < arr.length; j++) {
+      if (arr[j] === str && i !== j) {
         return false;
       }
-      result.push(str);
     }
   }
   return true;
+};
+
+var errorColorFormInput = function (formInput) {
+  formInput.style.border = '2px solid red';
 };
 
 hashTeg.addEventListener('input', function () {
@@ -252,24 +254,26 @@ hashTeg.addEventListener('input', function () {
   for (var i = 0; i < tagText.length; i++) {
     var arrElement = tagText[i];
     arrElement.toLowerCase();
-    if (!result) {
-      hashTeg.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
-      break;
-    }
     arrElement.split('');
-    if (arrElement[0] !== '#') {
+    if (tagText.length > 5) {
+      hashTeg.setCustomValidity('Нельзя писать больше 5-ти хэш-тегов');
+    } else if (!result) {
+      hashTeg.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
+    } else if (arrElement[0] !== '#') {
       hashTeg.setCustomValidity('Хэш-тег должен начинаться с #');
-    } else if (hashTeg.validity.tooShort) {
+    } else if (arrElement.length < 2) {
       hashTeg.setCustomValidity('Хэш-тег не должен быть короче 2 символов');
-    } else if (hashTeg.validity.tooLong) {
+    } else if (arrElement.length > 20) {
       hashTeg.setCustomValidity('Хэш-тег не должен превышать 20 символов');
     } else {
       hashTeg.setCustomValidity('');
     }
   }
-  document.addEventListener('keydown', function (evt) {
+  document.addEventListener('blur', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      hashTeg.blur();
+      if (evt.target.tagName !== hashTeg) {
+        hashTeg.blur();
+      }
     }
   });
 });
@@ -282,7 +286,7 @@ commentsText.addEventListener('input', function () {
   } else {
     commentsText.setCustomValidity('');
   }
-  document.addEventListener('keydown', function (evt) {
+  document.addEventListener('blur', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       commentsText.blur();
     }
