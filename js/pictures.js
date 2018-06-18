@@ -243,10 +243,6 @@ var withUniq = function (arr) {
   return true;
 };
 
-var errorColorFormInput = function (formInput) {
-  formInput.style.border = '2px solid red';
-};
-
 hashTeg.addEventListener('input', function () {
   var tagText = hashTeg.value.split(' ');
   var result = withUniq(tagText);
