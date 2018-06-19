@@ -137,12 +137,6 @@ closeWindow.addEventListener('click', function () {
   closePopup();
 });
 
-closeWindow.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closePopup();
-  }
-});
-
 var uploadFile = document.querySelector('#upload-file');
 var imgUpload = document.querySelector('.img-upload__overlay');
 uploadFile.addEventListener('change', function () {
@@ -244,32 +238,35 @@ var withUniq = function (arr) {
 };
 
 hashTeg.addEventListener('input', function () {
-  var tagText = hashTeg.value.split(' ');
-  var result = withUniq(tagText);
+  var tags = hashTeg.value.split(' ');
 
-  for (var i = 0; i < tagText.length; i++) {
-    var arrElement = tagText[i];
+  for (var i = 0; i < tags.length; i++) {
+    var arrElement = tags[i];
     arrElement.toLowerCase();
     arrElement.split('');
-    if (tagText.length > 5) {
+    if (tags.length > 5) {
       hashTeg.setCustomValidity('Нельзя писать больше 5-ти хэш-тегов');
-    } else if (!result) {
+      hashTeg.style.borderColor = 'red';
+    } else if (!withUniq(tags)) {
       hashTeg.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
+      hashTeg.style.borderColor = 'red';
     } else if (arrElement[0] !== '#') {
       hashTeg.setCustomValidity('Хэш-тег должен начинаться с #');
+      hashTeg.style.borderColor = 'red';
     } else if (arrElement.length < 2) {
       hashTeg.setCustomValidity('Хэш-тег не должен быть короче 2 символов');
+      hashTeg.style.borderColor = 'red';
     } else if (arrElement.length > 20) {
       hashTeg.setCustomValidity('Хэш-тег не должен превышать 20 символов');
+      hashTeg.style.borderColor = 'red';
     } else {
       hashTeg.setCustomValidity('');
+      hashTeg.style.borderColor = 'green';
     }
   }
-  document.addEventListener('blur', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      if (evt.target.tagName !== hashTeg) {
-        hashTeg.blur();
-      }
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE && evt.target.tagName !== 'INPUT') {
+      closePopup();
     }
   });
 });
@@ -282,11 +279,6 @@ commentsText.addEventListener('input', function () {
   } else {
     commentsText.setCustomValidity('');
   }
-  document.addEventListener('blur', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      commentsText.blur();
-    }
-  });
 });
 
 var users = generateArray(25, generateData);
