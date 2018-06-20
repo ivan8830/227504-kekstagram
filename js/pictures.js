@@ -102,8 +102,8 @@ var closeWindow = document.querySelector('.big-picture__cancel');
 var modalOpen = document.querySelector('body');
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closePopup();
+  if (evt.keyCode === ESC_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
+    closeAllPopup();
   }
 };
 
@@ -114,7 +114,7 @@ var openPopup = function () {
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-var closePopup = function () {
+var closeAllPopup = function () {
   userWindow.classList.add('hidden');
   imgUpload.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
@@ -128,13 +128,13 @@ openWindow.addEventListener('click', function (evt) {
 });
 
 openWindow.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
     openPopup();
   }
 });
 
 closeWindow.addEventListener('click', function () {
-  closePopup();
+  closeAllPopup();
 });
 
 var uploadFile = document.querySelector('#upload-file');
@@ -150,10 +150,8 @@ var openPopapEdit = function () {
 };
 
 var buttonCancel = document.querySelector('#upload-cancel');
-buttonCancel.addEventListener('click', function () {
-  closePopup();
-});
-buttonCancel.addEventListener('keydown', onPopupEscPress);
+buttonCancel.addEventListener('click', closeAllPopup);
+
 
 var resize = document.querySelector('.img-upload__resize');
 var resizePlus = resize.querySelector('.resize__control--plus');
@@ -187,49 +185,37 @@ var effects = [
   'effects__preview--none'
 ];
 
-var removeElements = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    imgUploadPreview.classList.remove(arr[i]);
-  }
+var changeEffectsElements = function (name) {
+  imgUploadPreview.classList.remove.apply(imgUploadPreview.classList, effects);
+  imgUploadPreview.classList.add(name);
 };
 
 effectOrigin.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--none');
+  changeEffectsElements('effects__preview--none');
 });
-
 effectChrom.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--chrome');
+  changeEffectsElements('effects__preview--chrome');
 });
-
 effectSepia.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--sepia');
+  changeEffectsElements('effects__preview--sepia');
 });
-
 effectMarvin.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--marvin');
+  changeEffectsElements('effects__preview--marvin');
 });
-
 effectPhobos.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--phobos');
+  changeEffectsElements('effects__preview--phobos');
 });
-
 effectHeat.addEventListener('click', function () {
-  removeElements(effects);
-  imgUploadPreview.classList.add('effects__preview--heat');
+  changeEffectsElements('effects__preview--heat');
 });
 
-var hashTeg = imgUpload.querySelector('.text__hashtags');
+
+var hashTag = imgUpload.querySelector('.text__hashtags');
 
 var withUniq = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    var str = arr[i];
     for (var j = 0; j < arr.length; j++) {
-      if (arr[j] === str && i !== j) {
+      if (arr[j] === arr[i] && i !== j) {
         return false;
       }
     }
@@ -237,38 +223,31 @@ var withUniq = function (arr) {
   return true;
 };
 
-hashTeg.addEventListener('input', function () {
-  var tags = hashTeg.value.split(' ');
+hashTag.addEventListener('input', function () {
+  var tags = hashTag.value.split(' ');
 
   for (var i = 0; i < tags.length; i++) {
-    var arrElement = tags[i];
-    arrElement.toLowerCase();
-    arrElement.split('');
+    var tag = tags[i].toLowerCase();
     if (tags.length > 5) {
-      hashTeg.setCustomValidity('Нельзя писать больше 5-ти хэш-тегов');
-      hashTeg.style.borderColor = 'red';
+      hashTag.setCustomValidity('Нельзя писать больше 5-ти хэш-тегов');
+      hashTag.style.borderColor = 'red';
     } else if (!withUniq(tags)) {
-      hashTeg.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
-      hashTeg.style.borderColor = 'red';
-    } else if (arrElement[0] !== '#') {
-      hashTeg.setCustomValidity('Хэш-тег должен начинаться с #');
-      hashTeg.style.borderColor = 'red';
-    } else if (arrElement.length < 2) {
-      hashTeg.setCustomValidity('Хэш-тег не должен быть короче 2 символов');
-      hashTeg.style.borderColor = 'red';
-    } else if (arrElement.length > 20) {
-      hashTeg.setCustomValidity('Хэш-тег не должен превышать 20 символов');
-      hashTeg.style.borderColor = 'red';
+      hashTag.setCustomValidity('Не может быть двух одинаковых хэш-тегов');
+      hashTag.style.borderColor = 'red';
+    } else if (tag[0] !== '#') {
+      hashTag.setCustomValidity('Хэш-тег должен начинаться с #');
+      hashTag.style.borderColor = 'red';
+    } else if (tag.length < 2) {
+      hashTag.setCustomValidity('Хэш-тег не должен быть короче 2 символов');
+      hashTag.style.borderColor = 'red';
+    } else if (tag.length > 20) {
+      hashTag.setCustomValidity('Хэш-тег не должен превышать 20 символов');
+      hashTag.style.borderColor = 'red';
     } else {
-      hashTeg.setCustomValidity('');
-      hashTeg.style.borderColor = 'green';
+      hashTag.setCustomValidity('');
+      hashTag.style.borderColor = 'green';
     }
   }
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && evt.target.tagName !== 'INPUT') {
-      closePopup();
-    }
-  });
 });
 
 var commentsText = imgUpload.querySelector('.text__description');
