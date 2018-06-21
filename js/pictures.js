@@ -128,7 +128,7 @@ openWindow.addEventListener('click', function (evt) {
 });
 
 openWindow.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
+  if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA' && evt.target.tagName !== 'BUTTON') {
     openPopup();
   }
 });
@@ -159,14 +159,18 @@ var resizeMinus = resize.querySelector('.resize__control--minus');
 var resizeValue = resize.querySelector('.resize__control--value');
 var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
 
-resizePlus.addEventListener('click', function () {
-  resizeValue.value = Math.min(100, (parseInt(resizeValue.value, 10) + STEP_PLUS)) + '%';
-  imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+resizePlus.addEventListener('click', function (evt) {
+  if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === ENTER_KEYCODE)) {
+    resizeValue.value = Math.min(100, (parseInt(resizeValue.value, 10) + STEP_PLUS)) + '%';
+    imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+  }
 });
 
-resizeMinus.addEventListener('click', function () {
-  resizeValue.value = Math.max(25, (parseInt(resizeValue.value, 10) - STEP_MINUS)) + '%';
-  imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+resizeMinus.addEventListener('click', function (evt) {
+  if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === ENTER_KEYCODE)) {
+    resizeValue.value = Math.max(25, (parseInt(resizeValue.value, 10) - STEP_MINUS)) + '%';
+    imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
+  }
 });
 
 var effectOrigin = imgUpload.querySelector('#effect-none');
