@@ -266,3 +266,55 @@ commentsText.addEventListener('input', function () {
 
 var users = generateArray(25, generateData);
 renderCards(users);
+
+var scaleLine = imgUpload.querySelector('.scale__line');
+var dialogHandle = scaleLine.querySelector('.scale__pin');
+
+var getCoords = function (elem) {
+  var box = elem.getBoundingClientRect();
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
+};
+
+dialogHandle.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoords = {
+    x: evt.clientX
+  };
+
+  var sliderCoords = getCoords(scaleLine);
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shiftX = startCoords.x - moveEvt.clientX;
+    var newLeft = startCoords.x - shiftX - sliderCoords.left;
+    var rightEdge = scaleLine.offsetWidth - dialogHandle.offsetWidth;
+    if (newLeft < 0) {
+      newLeft = 0;
+    }
+
+    if (newLeft > rightEdge) {
+      newLeft = rightEdge;
+    }
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    dialogHandle.style.left = newLeft + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
