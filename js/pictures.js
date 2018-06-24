@@ -213,7 +213,6 @@ effectHeat.addEventListener('click', function () {
   changeEffectsElements('effects__preview--heat');
 });
 
-
 var hashTag = imgUpload.querySelector('.text__hashtags');
 
 var withUniq = function (arr) {
@@ -269,6 +268,9 @@ renderCards(users);
 
 var scaleLine = imgUpload.querySelector('.scale__line');
 var dialogHandle = scaleLine.querySelector('.scale__pin');
+var scaleLevel = scaleLine.querySelector('.scale__level');
+var scaleValue = imgUpload.querySelector('.scale__value');
+var imgUploadEffect = imgUpload.querySelector('.img-upload__effects');
 
 var getCoords = function (elem) {
   var box = elem.getBoundingClientRect();
@@ -289,25 +291,21 @@ dialogHandle.addEventListener('mousedown', function (evt) {
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var shiftX = startCoords.x - moveEvt.clientX;
-    var newLeft = startCoords.x - shiftX - sliderCoords.left;
-    var rightEdge = scaleLine.offsetWidth - dialogHandle.offsetWidth;
-    if (newLeft < 0) {
-      newLeft = 0;
-    }
-
-    if (newLeft > rightEdge) {
-      newLeft = rightEdge;
-    }
-
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
+    var clamp = function (min, max, value) {
+      return Math.max(min, Math.min(max, value));
     };
 
+    var shiftX = startCoords.x - moveEvt.clientX;
+    var rightEdge = scaleLine.offsetWidth - (dialogHandle.offsetWidth / 2);
+    var newLeft = clamp(0, rightEdge, startCoords.x - shiftX - sliderCoords.left);
+
+    startCoords = {
+      x: moveEvt.clientX
+    };
+
+    scaleLevel.style.width = newLeft / rightEdge * 100 + '%';
     dialogHandle.style.left = newLeft + 'px';
   };
-
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
@@ -318,3 +316,20 @@ dialogHandle.addEventListener('mousedown', function (evt) {
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 });
+
+var editsEffects = function (name, newLeft, rightEdge) {
+  if (name === effectChrom) {
+    name.style.filter = 'grayscale(' + newLeft / rightEdge + ')';
+  } else if (name === effectSepia) {
+    name.style.filter = 'sepia(' + newLeft / rightEdge + ')';
+  } else if (name === effectMarvin) {
+    name.style.filter = 'invert' + newLeft / rightEdge * 100 + '%)';
+  } else if (name === effectPhobos) {
+    name.style.filter = 'invert' + newLeft / rightEdge * 3 + 'px)';
+  } else if (name === effectHeat) {
+    name.style.filter = 'invert' + newLeft / rightEdge * 3 + ')';
+  } else if (name === effectOrigin) {
+    name.classList.add('hidden');
+  }
+};
+
