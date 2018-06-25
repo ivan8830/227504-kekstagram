@@ -197,18 +197,23 @@ var changeEffectsElements = function (name) {
 effectOrigin.addEventListener('click', function () {
   changeEffectsElements('effects__preview--none');
 });
+
 effectChrom.addEventListener('click', function () {
   changeEffectsElements('effects__preview--chrome');
 });
+
 effectSepia.addEventListener('click', function () {
   changeEffectsElements('effects__preview--sepia');
 });
+
 effectMarvin.addEventListener('click', function () {
   changeEffectsElements('effects__preview--marvin');
 });
+
 effectPhobos.addEventListener('click', function () {
   changeEffectsElements('effects__preview--phobos');
 });
+
 effectHeat.addEventListener('click', function () {
   changeEffectsElements('effects__preview--heat');
 });
@@ -269,8 +274,9 @@ renderCards(users);
 var scaleLine = imgUpload.querySelector('.scale__line');
 var dialogHandle = scaleLine.querySelector('.scale__pin');
 var scaleLevel = scaleLine.querySelector('.scale__level');
-var scaleValue = imgUpload.querySelector('.scale__value');
-var imgUploadEffect = imgUpload.querySelector('.img-upload__effects');
+var scaleInput = imgUpload.querySelector('.scale__value');
+var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
+
 
 var getCoords = function (elem) {
   var box = elem.getBoundingClientRect();
@@ -279,6 +285,7 @@ var getCoords = function (elem) {
     left: box.left + pageXOffset
   };
 };
+
 
 dialogHandle.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -295,6 +302,26 @@ dialogHandle.addEventListener('mousedown', function (evt) {
       return Math.max(min, Math.min(max, value));
     };
 
+    var editsEffects = function (name) {
+      imgUploadScale.classList.remove('hidden');
+      dialogHandle.style.left = '100%';
+      scaleLevel.style.width = '100%';
+
+      if (name === effectChrom) {
+        imgUploadPreview.style.filter = 'grayscale(' + scaleInput.value / 100 + ')';
+      } else if (name === effectSepia) {
+        imgUploadPreview.style.filter = 'sepia(' + scaleInput.value / 100 + ')';
+      } else if (name === effectMarvin) {
+        imgUploadPreview.style.filter = 'invert' + scaleInput.value + '%)';
+      } else if (name === effectPhobos) {
+        imgUploadPreview.style.filter = 'blur' + scaleInput.value / 100 * 3 + 'px)';
+      } else if (name === effectHeat) {
+        imgUploadPreview.style.filter = 'brightness' + scaleInput.value / 100 * 3 + ')';
+      } else if (name === effectOrigin) {
+        imgUploadScale.classList.add('hidden');
+      }
+    };
+
     var shiftX = startCoords.x - moveEvt.clientX;
     var rightEdge = scaleLine.offsetWidth - (dialogHandle.offsetWidth / 2);
     var newLeft = clamp(0, rightEdge, startCoords.x - shiftX - sliderCoords.left);
@@ -303,7 +330,15 @@ dialogHandle.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX
     };
 
-    scaleLevel.style.width = newLeft / rightEdge * 100 + '%';
+    editsEffects(effectOrigin);
+    editsEffects(effectChrom);
+    editsEffects(effectSepia);
+    editsEffects(effectMarvin);
+    editsEffects(effectPhobos);
+    editsEffects(effectHeat);
+    var catchPercent = newLeft / rightEdge * 100;
+    scaleInput.value = catchPercent;
+    scaleLevel.style.width = catchPercent + '%';
     dialogHandle.style.left = newLeft + 'px';
   };
   var onMouseUp = function (upEvt) {
@@ -317,19 +352,4 @@ dialogHandle.addEventListener('mousedown', function (evt) {
   document.addEventListener('mouseup', onMouseUp);
 });
 
-var editsEffects = function (name, newLeft, rightEdge) {
-  if (name === effectChrom) {
-    name.style.filter = 'grayscale(' + newLeft / rightEdge + ')';
-  } else if (name === effectSepia) {
-    name.style.filter = 'sepia(' + newLeft / rightEdge + ')';
-  } else if (name === effectMarvin) {
-    name.style.filter = 'invert' + newLeft / rightEdge * 100 + '%)';
-  } else if (name === effectPhobos) {
-    name.style.filter = 'invert' + newLeft / rightEdge * 3 + 'px)';
-  } else if (name === effectHeat) {
-    name.style.filter = 'invert' + newLeft / rightEdge * 3 + ')';
-  } else if (name === effectOrigin) {
-    name.classList.add('hidden');
-  }
-};
 
