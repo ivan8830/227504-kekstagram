@@ -189,33 +189,66 @@ var effects = [
   'effects__preview--none'
 ];
 
+var currentEffect = '';
+var scaleInput = imgUpload.querySelector('.scale__value');
+var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
+
 var changeEffectsElements = function (name) {
   imgUploadPreview.classList.remove.apply(imgUploadPreview.classList, effects);
   imgUploadPreview.classList.add(name);
 };
 
+var applyEffect = function () {
+  changeEffectsElements('effects__preview--' + currentEffect);
+
+  imgUploadScale.classList.remove('hidden');
+  scaleInput.value = '100';
+  dialogHandle.style.left = '100%';
+  scaleLevel.style.width = '100%';
+
+  if (currentEffect === 'chrome') {
+    imgUploadPreview.style.filter = 'grayscale(' + scaleInput.value / 100 + ')';
+  } else if (currentEffect === 'sepia') {
+    imgUploadPreview.style.filter = 'sepia(' + scaleInput.value / 100 + ')';
+  } else if (currentEffect === 'marvin') {
+    imgUploadPreview.style.filter = 'invert(' + scaleInput.value + '%)';
+  } else if (currentEffect === 'phobos') {
+    imgUploadPreview.style.filter = 'blur(' + scaleInput.value / 100 * 3 + 'px)';
+  } else if (currentEffect === 'heat') {
+    imgUploadPreview.style.filter = 'brightness(' + scaleInput.value / 100 * 3 + ')';
+  } else if (currentEffect === 'none') {
+    imgUploadScale.classList.add('hidden');
+  }
+};
+
 effectOrigin.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--none');
+  currentEffect = 'none';
+  applyEffect();
 });
 
 effectChrom.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--chrome');
+  currentEffect = 'chrome';
+  applyEffect();
 });
 
 effectSepia.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--sepia');
+  currentEffect = 'sepia';
+  applyEffect();
 });
 
 effectMarvin.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--marvin');
+  currentEffect = 'marvin';
+  applyEffect();
 });
 
 effectPhobos.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--phobos');
+  currentEffect = 'phobos';
+  applyEffect();
 });
 
 effectHeat.addEventListener('click', function () {
-  changeEffectsElements('effects__preview--heat');
+  currentEffect = 'heat';
+  applyEffect();
 });
 
 var hashTag = imgUpload.querySelector('.text__hashtags');
@@ -274,9 +307,6 @@ renderCards(users);
 var scaleLine = imgUpload.querySelector('.scale__line');
 var dialogHandle = scaleLine.querySelector('.scale__pin');
 var scaleLevel = scaleLine.querySelector('.scale__level');
-var scaleInput = imgUpload.querySelector('.scale__value');
-var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
-
 
 var getCoords = function (elem) {
   var box = elem.getBoundingClientRect();
@@ -302,26 +332,6 @@ dialogHandle.addEventListener('mousedown', function (evt) {
       return Math.max(min, Math.min(max, value));
     };
 
-    var editsEffects = function (name) {
-      imgUploadScale.classList.remove('hidden');
-      dialogHandle.style.left = '100%';
-      scaleLevel.style.width = '100%';
-
-      if (name === effectChrom) {
-        imgUploadPreview.style.filter = 'grayscale(' + scaleInput.value / 100 + ')';
-      } else if (name === effectSepia) {
-        imgUploadPreview.style.filter = 'sepia(' + scaleInput.value / 100 + ')';
-      } else if (name === effectMarvin) {
-        imgUploadPreview.style.filter = 'invert' + scaleInput.value + '%)';
-      } else if (name === effectPhobos) {
-        imgUploadPreview.style.filter = 'blur' + scaleInput.value / 100 * 3 + 'px)';
-      } else if (name === effectHeat) {
-        imgUploadPreview.style.filter = 'brightness' + scaleInput.value / 100 * 3 + ')';
-      } else if (name === effectOrigin) {
-        imgUploadScale.classList.add('hidden');
-      }
-    };
-
     var shiftX = startCoords.x - moveEvt.clientX;
     var rightEdge = scaleLine.offsetWidth - (dialogHandle.offsetWidth / 2);
     var newLeft = clamp(0, rightEdge, startCoords.x - shiftX - sliderCoords.left);
@@ -330,14 +340,9 @@ dialogHandle.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX
     };
 
-    editsEffects(effectOrigin);
-    editsEffects(effectChrom);
-    editsEffects(effectSepia);
-    editsEffects(effectMarvin);
-    editsEffects(effectPhobos);
-    editsEffects(effectHeat);
     var catchPercent = newLeft / rightEdge * 100;
     scaleInput.value = catchPercent;
+    applyEffect();
     scaleLevel.style.width = catchPercent + '%';
     dialogHandle.style.left = newLeft + 'px';
   };
