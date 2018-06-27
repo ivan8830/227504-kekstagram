@@ -189,9 +189,10 @@ var effects = [
   'effects__preview--none'
 ];
 
-var currentEffect = '';
-var scaleInput = imgUpload.querySelector('.scale__value');
+var currentEffect = 'sepia';
 var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
+var scaleInput = imgUploadScale.querySelector('input');
+
 
 var changeEffectsElements = function (name) {
   imgUploadPreview.classList.remove.apply(imgUploadPreview.classList, effects);
@@ -342,7 +343,6 @@ dialogHandle.addEventListener('mousedown', function (evt) {
 
     var catchPercent = newLeft / rightEdge * 100;
     scaleInput.value = catchPercent;
-    applyEffect();
     scaleLevel.style.width = catchPercent + '%';
     dialogHandle.style.left = newLeft + 'px';
   };
