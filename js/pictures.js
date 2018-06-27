@@ -191,7 +191,7 @@ var effects = [
 
 var currentEffect = 'sepia';
 var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
-var scaleInput = imgUploadScale.querySelector('input');
+var scaleInput = imgUploadScale.querySelector('input[name="effect-level"]');
 
 
 var changeEffectsElements = function (name) {
@@ -200,57 +200,54 @@ var changeEffectsElements = function (name) {
 };
 
 var applyEffect = function () {
+
   changeEffectsElements('effects__preview--' + currentEffect);
 
   imgUploadScale.classList.remove('hidden');
-  scaleInput.value = '100';
-  dialogHandle.style.left = '100%';
-  scaleLevel.style.width = '100%';
+
+  var value = parseFloat(scaleInput.value);
 
   if (currentEffect === 'chrome') {
-    imgUploadPreview.style.filter = 'grayscale(' + scaleInput.value / 100 + ')';
+    imgUploadPreview.style.filter = 'grayscale(' + value / 100 + ')';
   } else if (currentEffect === 'sepia') {
-    imgUploadPreview.style.filter = 'sepia(' + scaleInput.value / 100 + ')';
+    imgUploadPreview.style.filter = 'sepia(' + value / 100 + ')';
   } else if (currentEffect === 'marvin') {
-    imgUploadPreview.style.filter = 'invert(' + scaleInput.value + '%)';
+    imgUploadPreview.style.filter = 'invert(' + value + '%)';
   } else if (currentEffect === 'phobos') {
-    imgUploadPreview.style.filter = 'blur(' + scaleInput.value / 100 * 3 + 'px)';
+    imgUploadPreview.style.filter = 'blur(' + value / 100 * 3 + 'px)';
   } else if (currentEffect === 'heat') {
-    imgUploadPreview.style.filter = 'brightness(' + scaleInput.value / 100 * 3 + ')';
+    imgUploadPreview.style.filter = 'brightness(' + (value / 100 * 2 + 1) + ')';
   } else if (currentEffect === 'none') {
     imgUploadScale.classList.add('hidden');
+    imgUploadPreview.style.filter = 'none';
   }
 };
 
-effectOrigin.addEventListener('click', function () {
-  currentEffect = 'none';
-  applyEffect();
-});
+var setValue = function (value) {
+  dialogHandle.style.left = value + '%';
+  scaleLevel.style.width = value + '%';
+  scaleInput.value = value.toFixed(2);
+};
 
-effectChrom.addEventListener('click', function () {
-  currentEffect = 'chrome';
-  applyEffect();
-});
+var setEffect = function (name) {
+  return function () {
+    currentEffect = name;
+    setValue(100);
+    applyEffect();
+  };
+};
 
-effectSepia.addEventListener('click', function () {
-  currentEffect = 'sepia';
-  applyEffect();
-});
+effectOrigin.addEventListener('click', setEffect('none'));
 
-effectMarvin.addEventListener('click', function () {
-  currentEffect = 'marvin';
-  applyEffect();
-});
+effectChrom.addEventListener('click', setEffect('chrome'));
 
-effectPhobos.addEventListener('click', function () {
-  currentEffect = 'phobos';
-  applyEffect();
-});
+effectSepia.addEventListener('click', setEffect('sepia'));
 
-effectHeat.addEventListener('click', function () {
-  currentEffect = 'heat';
-  applyEffect();
-});
+effectMarvin.addEventListener('click', setEffect('marvin'));
+
+effectPhobos.addEventListener('click', setEffect('phobos'));
+
+effectHeat.addEventListener('click', setEffect('heat'));
 
 var hashTag = imgUpload.querySelector('.text__hashtags');
 
@@ -317,35 +314,29 @@ var getCoords = function (elem) {
   };
 };
 
+var clamp = function (min, max, value) {
+  return Math.max(min, Math.min(max, value));
+};
 
 dialogHandle.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var startCoords = {
-    x: evt.clientX
-  };
+  var startX = evt.clientX;
 
   var sliderCoords = getCoords(scaleLine);
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var clamp = function (min, max, value) {
-      return Math.max(min, Math.min(max, value));
-    };
-
-    var shiftX = startCoords.x - moveEvt.clientX;
+    var shiftX = startX - moveEvt.clientX;
     var rightEdge = scaleLine.offsetWidth - (dialogHandle.offsetWidth / 2);
-    var newLeft = clamp(0, rightEdge, startCoords.x - shiftX - sliderCoords.left);
+    var newLeft = clamp(0, rightEdge, startX - shiftX - sliderCoords.left);
 
-    startCoords = {
-      x: moveEvt.clientX
-    };
+    startX = moveEvt.clientX;
 
-    var catchPercent = newLeft / rightEdge * 100;
-    scaleInput.value = catchPercent;
-    scaleLevel.style.width = catchPercent + '%';
-    dialogHandle.style.left = newLeft + 'px';
+    setValue(newLeft / rightEdge * 100);
+    applyEffect();
   };
+
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
