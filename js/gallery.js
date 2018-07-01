@@ -15,7 +15,7 @@ window.gallery = (function () {
   var openPopup = function () {
     window.preview.user.classList.remove('hidden');
     modalOpen.classList.add('modal-open');
-    window.preview.dialogUser(window.backend.setup[0]);
+    window.preview.dialogUser(window.backend.load(window.preview.load, window.preview.error));
     document.addEventListener('keydown', onPopupEscPress);
   };
 

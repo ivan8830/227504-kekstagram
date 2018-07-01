@@ -24,21 +24,19 @@ window.picture = (function () {
 
   };
 
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  var showError = function (errorMessage) {
+    var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+    var errorElement = errorTemplate.cloneNode(true);
+    errorElement.querySelector('.error').classList.remove('hidden');
+    errorElement.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  window.backend.load(loadHandler, errorHandler);
+  var users = window.backend.load(loadHandler, showError);
 
   return {
-    error: errorHandler
+    user: users,
+    error: showError,
+    load: loadHandler
   };
 })();

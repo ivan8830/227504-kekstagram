@@ -15,9 +15,6 @@
       }
     });
     xhr.addEventListener('error', function () {
-      var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
-      var errorElement = errorTemplate.cloneNode(true);
-      errorElement.querySelector('.error').classList.remove('hidden');
       onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
