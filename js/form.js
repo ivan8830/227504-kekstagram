@@ -56,7 +56,7 @@ window.form = (function () {
     'effects__preview--none'
   ];
 
-  var currentEffect = 'sepia';
+  var currentEffect = 'none';
   var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
   var scaleInput = imgUploadScale.querySelector('input[name="effect-level"]');
 
@@ -211,6 +211,17 @@ window.form = (function () {
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  });
+
+  var form = document.querySelector('.img-upload__form');
+  form.addEventListener('submit', function (evt) {
+    window.backend.upLoad(new FormData(form), function () {
+      window.form.upload.classList.add('hidden');
+      hashTag.value = '';
+      commentsText.value = '';
+      currentEffect = 'none';
+    }, window.picture.error);
+    evt.preventDefault();
   });
 
   return {

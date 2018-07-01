@@ -1,0 +1,46 @@
+'use strict';
+
+(function () {
+  var URL = 'https://js.dump.academy/kekstagram';
+
+  var setup = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError(xhr.response);
+      }
+    });
+    xhr.addEventListener('error', function () {
+      var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+      var errorElement = errorTemplate.cloneNode(true);
+      errorElement.querySelector('.error').classList.remove('hidden');
+      onError('Произошла ошибка соединения');
+    });
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.timeout = 10000;
+
+    return xhr;
+  };
+
+  window.backend = {
+    upLoad: function (data, onLoad, onError) {
+      var xhr = setup(onLoad, onError);
+
+      xhr.open('POST', URL);
+      xhr.send(data);
+    },
+    load: function (onLoad, onError) {
+      var xhr = setup(onLoad, onError);
+
+      xhr.open('GET', URL + '/data');
+      xhr.send();
+    }
+  };
+})();
