@@ -220,6 +220,7 @@ window.form = (function () {
       hashTag.value = '';
       commentsText.value = '';
       currentEffect = 'none';
+      changeEffectsElements('effects__preview--' + currentEffect);
     }, window.picture.error);
     evt.preventDefault();
   });

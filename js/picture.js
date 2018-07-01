@@ -33,7 +33,7 @@ window.picture = (function () {
   };
 
   var users = window.backend.load(loadHandler, showError);
-
+console.log(window.picture.user);
   return {
     user: users,
     error: showError,
