@@ -1,26 +1,42 @@
 'use strict';
 
 window.picture = (function () {
-  var renderCards = function (arr) {
-    var pictures = document.querySelector('.pictures');
-    var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
-    var fragment = document.createDocumentFragment();
+  var pictures = document.querySelector('.pictures');
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 
-    for (var i = 0; i < arr.length; i++) {
-      var picturesElement = pictureTemplate.cloneNode(true);
-      picturesElement.querySelector('.picture__img').src = arr[i].url;
-      picturesElement.querySelector('.picture__stat--likes').textContent = arr[i].likes;
-      picturesElement.querySelector('.picture__stat--comments').textContent = arr[i].comments.length;
-      fragment.appendChild(picturesElement);
-    }
+  var renderCards = function (card) {
 
-    pictures.appendChild(fragment);
+    var picturesElement = pictureTemplate.cloneNode(true);
+    picturesElement.querySelector('.picture__img').src = card.url;
+    picturesElement.querySelector('.picture__stat--likes').textContent = card.likes;
+    picturesElement.querySelector('.picture__stat--comments').textContent = card.comments.length;
 
-    return pictures;
+    return picturesElement;
   };
 
-  var users = window.data.generateArray(25, window.data.generateData);
-  renderCards(users);
+  var loadHandler = function (cards) {
+    var fragment = document.createDocumentFragment();
 
-  return users;
+    for (var i = 0; i < 25; i++) {
+      fragment.appendChild(renderCards(cards[i]));
+    }
+    pictures.appendChild(fragment);
+
+  };
+
+  var showError = function (errorMessage) {
+    var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+    var errorElement = errorTemplate.cloneNode(true);
+    errorElement.querySelector('.error').classList.remove('hidden');
+    errorElement.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
+
+  var users = window.backend.load(loadHandler, showError);
+console.log(window.picture.user);
+  return {
+    user: users,
+    error: showError,
+    load: loadHandler
+  };
 })();
