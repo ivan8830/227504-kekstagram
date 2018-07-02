@@ -38,7 +38,6 @@
 
       xhr.open('GET', URL + '/data');
       xhr.send();
-    },
-    setuo: setup
+    }
   };
 })();

@@ -12,7 +12,7 @@ window.gallery = (function () {
     }
   };
 
-  var openPopup = function (evt) {
+  var openPopup = function () {
     window.preview.user.classList.remove('hidden');
     modalOpen.classList.add('modal-open');
     window.preview.dialogUser();

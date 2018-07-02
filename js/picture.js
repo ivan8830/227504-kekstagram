@@ -27,15 +27,12 @@ window.picture = (function () {
   var showError = function (errorMessage) {
     var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
     var errorElement = errorTemplate.cloneNode(true);
-    errorElement.querySelector('.error');
     errorElement.classList.remove('hidden');
     errorElement.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  var users = window.backend.load(loadHandler, showError);
   return {
-    user: users,
     error: showError,
     load: loadHandler
   };
