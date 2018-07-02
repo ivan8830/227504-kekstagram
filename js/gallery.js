@@ -12,10 +12,10 @@ window.gallery = (function () {
     }
   };
 
-  var openPopup = function () {
+  var openPopup = function (evt) {
     window.preview.user.classList.remove('hidden');
     modalOpen.classList.add('modal-open');
-    window.preview.dialogUser(window.backend.load(window.preview.load, window.preview.error));
+    window.preview.dialogUser();
     document.addEventListener('keydown', onPopupEscPress);
   };
 

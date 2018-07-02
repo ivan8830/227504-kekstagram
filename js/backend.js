@@ -21,7 +21,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 100;
+    xhr.timeout = 10000;
 
     return xhr;
   };
@@ -38,6 +38,7 @@
 
       xhr.open('GET', URL + '/data');
       xhr.send();
-    }
+    },
+    setuo: setup
   };
 })();
