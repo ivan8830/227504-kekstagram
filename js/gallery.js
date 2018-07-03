@@ -15,7 +15,6 @@ window.gallery = (function () {
   var openPopup = function () {
     window.preview.user.classList.remove('hidden');
     modalOpen.classList.add('modal-open');
-    window.preview.dialogUser();
     document.addEventListener('keydown', onPopupEscPress);
   };
 
@@ -43,6 +42,7 @@ window.gallery = (function () {
   });
 
   return {
+    escCode: ESC_KEYCODE,
     escPress: onPopupEscPress,
     open: openPopup,
     close: closeAllPopup,

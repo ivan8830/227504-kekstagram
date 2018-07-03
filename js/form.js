@@ -6,6 +6,8 @@ window.form = (function () {
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUpload = document.querySelector('.img-upload__overlay');
+  var currentEffect = 'none';
+
   uploadFile.addEventListener('change', function () {
     openPopapEdit();
   });
@@ -14,6 +16,8 @@ window.form = (function () {
     imgUpload.classList.remove('hidden');
     uploadFile.innerHTML = uploadFile.innerHTML;
     document.addEventListener('keydown', window.gallery.escPress);
+    currentEffect = 'none';
+    applyEffect();
   };
 
   var buttonCancel = document.querySelector('#upload-cancel');
@@ -56,7 +60,7 @@ window.form = (function () {
     'effects__preview--none'
   ];
 
-  var currentEffect = 'none';
+
   var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
   var scaleInput = imgUploadScale.querySelector('input[name="effect-level"]');
 
@@ -64,13 +68,14 @@ window.form = (function () {
   var changeEffectsElements = function (name) {
     imgUploadPreview.classList.remove.apply(imgUploadPreview.classList, effects);
     imgUploadPreview.classList.add(name);
+
+    var simpleName = name.split('--')[1];
+    document.querySelector('#effect-' + simpleName).checked = true;
   };
 
   var applyEffect = function () {
-
-    changeEffectsElements('effects__preview--' + currentEffect);
-
     imgUploadScale.classList.remove('hidden');
+    changeEffectsElements('effects__preview--' + currentEffect);
 
     var value = parseFloat(scaleInput.value);
 
