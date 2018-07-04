@@ -4,6 +4,15 @@ window.picture = (function () {
   var pictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 
+  var creatElements = function (cards) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < cards.length; i++) {
+      fragment.appendChild(renderCards(cards[i]));
+    }
+    pictures.appendChild(fragment);
+  };
+
   var renderCards = function (card) {
 
     var picturesElement = pictureTemplate.cloneNode(true);
@@ -21,12 +30,7 @@ window.picture = (function () {
   var loadHandler = function (cards) {
     window.picture.photos = cards;
 
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < 25; i++) {
-      fragment.appendChild(renderCards(cards[i]));
-    }
-    pictures.appendChild(fragment);
+    creatElements(cards);
 
   };
 
@@ -48,18 +52,32 @@ window.picture = (function () {
   var filterDiscussed = imgFilters.querySelector('#filter-discussed');
 
   var currentFilter = 'popular';
+  var filters = {
+    popular: function (all) {
+      return all.slice();
+    },
+    new: function (ten) {
+      return ten.slice(0, 10);
+    },
+    discussed: function (all) {
+      return all.slice().sort(function (left, right) {
+        return right.comments.length - left.comments.length;
+      });
+    }
+  };
 
   var applyFilter = function () {
     for (var i = 0; i < imgFiltersButton.length; i++) {
       imgFiltersButton[i].classList.remove('img-filters__button--active');
     }
-    if (currentFilter === 'popular') {
-      filterPopular.classList.add('img-filters__button--active');
-    } else if (currentFilter === 'new') {
-      filterNew.classList.add('img-filters__button--active');
-    } else if (currentFilter === 'discussed') {
-      filterDiscussed.classList.add('img-filters__button--active');
+    var picturesLink = document.querySelectorAll('.picture__link');
+    var allPhotos = window.picture.photos;
+    for (var j = 0; j < picturesLink.length; j++) {
+      picturesLink[j].remove();
     }
+    imgFilters.querySelector('#filter-' + currentFilter).classList.add('img-filters__button--active');
+    var photos = filters[currentFilter](allPhotos);
+    creatElements(photos);
   };
 
   var setFilter = function (name) {
@@ -75,7 +93,5 @@ window.picture = (function () {
 
   return {
     photos: [],
-    error: showError,
-    load: loadHandler
   };
 })();

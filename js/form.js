@@ -21,7 +21,7 @@ window.form = (function () {
   };
 
   var buttonCancel = document.querySelector('#upload-cancel');
-  buttonCancel.addEventListener('click', window.gallery.close);
+  buttonCancel.addEventListener('click', window.gallery.closeAllPopup);
 
 
   var resize = document.querySelector('.img-upload__resize');

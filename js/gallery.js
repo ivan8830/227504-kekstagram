@@ -1,13 +1,11 @@
 'use strict';
 
 window.gallery = (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
   var closeWindow = document.querySelector('.big-picture__cancel');
   var modalOpen = document.querySelector('body');
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
+    if (evt.keyCode === window.utils.ESC_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
       closeAllPopup();
     }
   };
@@ -32,7 +30,7 @@ window.gallery = (function () {
   });
 
   openWindow.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA' && evt.target.tagName !== 'BUTTON') {
+    if (evt.keyCode === window.utils.ENTER_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA' && evt.target.tagName !== 'BUTTON') {
       openPopup();
     }
   });
@@ -42,10 +40,8 @@ window.gallery = (function () {
   });
 
   return {
-    escCode: ESC_KEYCODE,
-    escPress: onPopupEscPress,
-    open: openPopup,
-    close: closeAllPopup,
-    enterKey: ENTER_KEYCODE
+    onPopupEscPress: onPopupEscPress,
+    openPopup: openPopup,
+    closeAllPopup: closeAllPopup,
   };
 })();

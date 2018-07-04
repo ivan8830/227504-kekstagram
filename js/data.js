@@ -53,7 +53,7 @@ window.data = (function () {
   return {
     generateArray: generateArray,
     generateData: generateData,
-    randomNumber: getRandomNumber,
+    getRandomNumber: getRandomNumber,
     getRandomValue: getRandomValue,
     description: description
   };
