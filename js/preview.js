@@ -5,13 +5,35 @@ window.preview = (function () {
   var visibleCommentCount = 5;
   var commentsCard = userWindow.querySelector('.social__comments');
   var buttonLoad = userWindow.querySelector('.social__loadmore');
+  var bigPictureCancel = userWindow.querySelector('.big-picture__cancel');
 
-  userWindow.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
-      userWindow.classList.add('hidden');
-    }
-  });
+
   var comments = '';
+  var remveHandlers = [];
+
+  var open = function () {
+    userWindow.classList.remove('hidden');
+    remveHandlers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        close();
+      }
+    }));
+
+    remveHandlers.push(window.utils.addEventListener(bigPictureCancel, 'keydown', function (evt) {
+      if (evt.keyCode === window.utils.ENTER_KEYCODE) {
+        close();
+      }
+    }));
+    remveHandlers.push(window.utils.addEventListener(bigPictureCancel, 'click', close));
+  };
+
+  var close = function () {
+    userWindow.classList.add('hidden');
+
+    remveHandlers.forEach(function (fn) {
+      fn();
+    });
+  };
 
   var makeElement = function (tagName, className) {
     var element = document.createElement(tagName);
@@ -51,17 +73,16 @@ window.preview = (function () {
   };
 
   var showDialogUser = function (data) {
-    userWindow.classList.remove('hidden');
+    open();
     userWindow.querySelector('.big-picture__img').src = data.url;
     userWindow.querySelector('.likes-count').textContent = data.likes;
     visibleCommentCount = 5;
 
     render(data);
-
-    buttonLoad.addEventListener('click', function () {
+    remveHandlers.push(window.utils.addEventListener(buttonLoad, 'click', function () {
       visibleCommentCount += 5;
       render(data);
-    });
+    }));
     userWindow.querySelector('.social__caption').textContent = data.descriptions;
     return userWindow;
   };

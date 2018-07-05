@@ -5,15 +5,26 @@ window.utils = (function () {
     return Math.floor((Math.random() * (to - from + 1)) + from);
   };
 
-  var getRandomValue = function (arr) {
-    return Math.floor(Math.random() * arr.length);
+  var addEventListener = function (el, type, handler) {
+    el.addEventListener(type, handler);
+
+    return function () {
+      el.removeEventListener(type, handler);
+    };
+  };
+
+  var blurAfterEsc = function (e) {
+    if (e.keyCode === 27) {
+      e.target.blur();
+    }
   };
 
   return {
     ESC_KEYCODE: 27,
     ENTER_KEYCODE: 13,
     getRandomNumber: getRandomNumber,
-    getRandomValue: getRandomValue
+    addEventListener: addEventListener,
+    blurAfterEsc: blurAfterEsc
   };
 })();
 
