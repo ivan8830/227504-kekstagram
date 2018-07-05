@@ -81,10 +81,10 @@ window.picture = (function () {
   };
 
   var setFilter = function (name) {
-    return function () {
+    return window.debounce(function () {
       currentFilter = name;
       applyFilter();
-    };
+    }, 500);
   };
 
   filterPopular.addEventListener('click', setFilter('popular'));

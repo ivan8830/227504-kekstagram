@@ -31,7 +31,7 @@ window.preview = (function () {
 
       var imageCard = makeElement('img', 'social__picture');
 
-      imageCard.src = 'img/avatar-' + window.data.getRandomNumber(1, 6) + '.svg';
+      imageCard.src = 'img/avatar-' + window.utils.getRandomNumber(1, 6) + '.svg';
       imageCard.alt = 'Аватар комментатора фотографии';
       imageCard.width = '35';
       imageCard.height = '35';
@@ -46,7 +46,7 @@ window.preview = (function () {
     commentsCard.innerHTML = '';
     commentsCard.appendChild(fragment);
     var socialCommentCount = userWindow.querySelector('.social__comment-count');
-    socialCommentCount.textContent = visibleCommentCount + ' из ' + data.comments.length;
+    socialCommentCount.textContent = Math.min(visibleCommentCount, data.comments.length) + ' из ' + data.comments.length;
     buttonLoad.hidden = visibleCommentCount >= data.comments.length;
   };
 
@@ -54,22 +54,15 @@ window.preview = (function () {
     userWindow.classList.remove('hidden');
     userWindow.querySelector('.big-picture__img').src = data.url;
     userWindow.querySelector('.likes-count').textContent = data.likes;
-    if (visibleCommentCount >= data.comments.length) {
-      visibleCommentCount = data.comments.length;
-    }
+    visibleCommentCount = 5;
 
     render(data);
 
     buttonLoad.addEventListener('click', function () {
-      if (visibleCommentCount < data.comments.length) {
-        visibleCommentCount += 5;
-      }
-      if (visibleCommentCount >= data.comments.length) {
-        visibleCommentCount = data.comments.length;
-      }
+      visibleCommentCount += 5;
       render(data);
     });
-    userWindow.querySelector('.social__caption').textContent = window.data.description[window.data.getRandomValue(window.data.description)];
+    userWindow.querySelector('.social__caption').textContent = data.descriptions;
     return userWindow;
   };
 
