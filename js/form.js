@@ -22,8 +22,8 @@ window.form = (function () {
     handlerRemovers.push(window.utils.addEventListener(hashTag, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(commentsText, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
-      if (evt.keyCode === window.utils.ESC_KEYCODE && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'TEXTAREA') {
-        close();
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        evt.stopPropagation(close());
       }
     }));
 

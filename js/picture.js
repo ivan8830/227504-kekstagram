@@ -80,11 +80,13 @@ window.picture = (function () {
     creatElements(photos);
   };
 
+  var debouncedApplyFilter = window.debounce(applyFilter, 1000);
+
   var setFilter = function (name) {
-    return window.debounce(function () {
+    return function () {
       currentFilter = name;
-      applyFilter();
-    }, 500);
+      debouncedApplyFilter();
+    };
   };
 
   filterPopular.addEventListener('click', setFilter('popular'));

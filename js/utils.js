@@ -13,9 +13,9 @@ window.utils = (function () {
     };
   };
 
-  var blurAfterEsc = function (e) {
-    if (e.keyCode === 27) {
-      e.target.blur();
+  var blurAfterEsc = function (evt) {
+    if (evt.keyCode === 27) {
+      evt.target.blur();
     }
   };
 
