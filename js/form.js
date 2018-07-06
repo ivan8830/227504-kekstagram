@@ -6,19 +6,46 @@ window.form = (function () {
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUpload = document.querySelector('.img-upload__overlay');
+  var currentEffect = 'none';
+  var handlerRemovers = [];
+
   uploadFile.addEventListener('change', function () {
-    openPopapEdit();
+    open();
   });
 
-  var openPopapEdit = function () {
+  var open = function () {
     imgUpload.classList.remove('hidden');
     uploadFile.innerHTML = uploadFile.innerHTML;
-    document.addEventListener('keydown', window.gallery.escPress);
+    currentEffect = 'none';
+    applyEffect();
+
+    handlerRemovers.push(window.utils.addEventListener(hashTag, 'keydown', window.utils.blurAfterEsc));
+    handlerRemovers.push(window.utils.addEventListener(commentsText, 'keydown', window.utils.blurAfterEsc));
+    handlerRemovers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        evt.stopPropagation(close());
+      }
+    }));
+
+    var buttonCancel = document.querySelector('#upload-cancel');
+    handlerRemovers.push(window.utils.addEventListener(buttonCancel, 'click', close));
+
+    handlerRemovers.push(window.utils.addEventListener(effectOrigin, 'click', setEffect('none')));
+    handlerRemovers.push(window.utils.addEventListener(effectChrom, 'click', setEffect('chrome')));
+    handlerRemovers.push(window.utils.addEventListener(effectSepia, 'click', setEffect('sepia')));
+    handlerRemovers.push(window.utils.addEventListener(effectMarvin, 'click', setEffect('marvin')));
+    handlerRemovers.push(window.utils.addEventListener(effectPhobos, 'click', setEffect('phobos')));
+    handlerRemovers.push(window.utils.addEventListener(effectHeat, 'click', setEffect('heat')));
   };
 
-  var buttonCancel = document.querySelector('#upload-cancel');
-  buttonCancel.addEventListener('click', window.gallery.close);
+  var close = function () {
+    imgUpload.classList.add('hidden');
+    form.reset();
 
+    handlerRemovers.forEach(function (fn) {
+      fn();
+    });
+  };
 
   var resize = document.querySelector('.img-upload__resize');
   var resizePlus = resize.querySelector('.resize__control--plus');
@@ -27,25 +54,18 @@ window.form = (function () {
   var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
 
   resizePlus.addEventListener('click', function (evt) {
-    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.gallery.enterKey)) {
+    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.ENTER_KEYKODE)) {
       resizeValue.value = Math.min(100, (parseInt(resizeValue.value, 10) + STEP_PLUS)) + '%';
       imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
     }
   });
 
   resizeMinus.addEventListener('click', function (evt) {
-    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.gallery.enterKey)) {
+    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.ENTER_KEYKODE)) {
       resizeValue.value = Math.max(25, (parseInt(resizeValue.value, 10) - STEP_MINUS)) + '%';
       imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
     }
   });
-
-  var effectOrigin = imgUpload.querySelector('#effect-none');
-  var effectChrom = imgUpload.querySelector('#effect-chrome');
-  var effectSepia = imgUpload.querySelector('#effect-sepia');
-  var effectMarvin = imgUpload.querySelector('#effect-marvin');
-  var effectPhobos = imgUpload.querySelector('#effect-phobos');
-  var effectHeat = imgUpload.querySelector('#effect-heat');
 
   var effects = [
     'effects__preview--chrome',
@@ -56,21 +76,27 @@ window.form = (function () {
     'effects__preview--none'
   ];
 
-  var currentEffect = 'none';
+  var effectOrigin = imgUpload.querySelector('#effect-none');
+  var effectChrom = imgUpload.querySelector('#effect-chrome');
+  var effectSepia = imgUpload.querySelector('#effect-sepia');
+  var effectMarvin = imgUpload.querySelector('#effect-marvin');
+  var effectPhobos = imgUpload.querySelector('#effect-phobos');
+  var effectHeat = imgUpload.querySelector('#effect-heat');
+
   var imgUploadScale = imgUpload.querySelector('.img-upload__scale');
   var scaleInput = imgUploadScale.querySelector('input[name="effect-level"]');
-
 
   var changeEffectsElements = function (name) {
     imgUploadPreview.classList.remove.apply(imgUploadPreview.classList, effects);
     imgUploadPreview.classList.add(name);
+
+    var simpleName = name.split('--')[1];
+    document.querySelector('#effect-' + simpleName).checked = true;
   };
 
   var applyEffect = function () {
-
-    changeEffectsElements('effects__preview--' + currentEffect);
-
     imgUploadScale.classList.remove('hidden');
+    changeEffectsElements('effects__preview--' + currentEffect);
 
     var value = parseFloat(scaleInput.value);
 
@@ -103,18 +129,6 @@ window.form = (function () {
       applyEffect();
     };
   };
-
-  effectOrigin.addEventListener('click', setEffect('none'));
-
-  effectChrom.addEventListener('click', setEffect('chrome'));
-
-  effectSepia.addEventListener('click', setEffect('sepia'));
-
-  effectMarvin.addEventListener('click', setEffect('marvin'));
-
-  effectPhobos.addEventListener('click', setEffect('phobos'));
-
-  effectHeat.addEventListener('click', setEffect('heat'));
 
   var hashTag = imgUpload.querySelector('.text__hashtags');
 
@@ -166,7 +180,6 @@ window.form = (function () {
     }
   });
 
-
   var scaleLine = imgUpload.querySelector('.scale__line');
   var dialogHandle = scaleLine.querySelector('.scale__pin');
   var scaleLevel = scaleLine.querySelector('.scale__level');
@@ -217,11 +230,8 @@ window.form = (function () {
   form.addEventListener('submit', function (evt) {
     window.backend.upLoad(new FormData(form), function () {
       window.form.upload.classList.add('hidden');
-      hashTag.value = '';
-      commentsText.value = '';
-      currentEffect = 'none';
-      changeEffectsElements('effects__preview--' + currentEffect);
     }, window.picture.error);
+    form.reset();
     evt.preventDefault();
   });
 
