@@ -6,13 +6,15 @@ window.preview = (function () {
   var commentsCard = userWindow.querySelector('.social__comments');
   var buttonLoad = userWindow.querySelector('.social__loadmore');
   var bigPictureCancel = userWindow.querySelector('.big-picture__cancel');
-
+  var modalOpen = document.querySelector('body');
+  var bigPictureImg = userWindow.querySelector('.big-picture__img');
 
   var comments = '';
   var remveHandlers = [];
 
   var open = function () {
     userWindow.classList.remove('hidden');
+    modalOpen.classList.add('modal-open');
     remveHandlers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
       if (evt.keyCode === window.utils.ESC_KEYCODE) {
         close();
@@ -29,6 +31,7 @@ window.preview = (function () {
 
   var close = function () {
     userWindow.classList.add('hidden');
+    modalOpen.classList.remove('modal-open');
 
     remveHandlers.forEach(function (fn) {
       fn();
@@ -74,7 +77,7 @@ window.preview = (function () {
 
   var showDialogUser = function (data) {
     open();
-    userWindow.querySelector('.big-picture__img').src = data.url;
+    bigPictureImg.querySelector('img').src = data.url;
     userWindow.querySelector('.likes-count').textContent = data.likes;
     visibleCommentCount = 5;
 
