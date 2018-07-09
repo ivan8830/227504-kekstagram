@@ -14,7 +14,7 @@ window.utils = (function () {
   };
 
   var blurAfterEsc = function (evt) {
-    if (evt.keyCode === 27 && evt.target) {
+    if (evt.keyCode === 27) {
       evt.target.blur();
     }
   };

@@ -50,11 +50,9 @@ window.picture = (function () {
   var filterNew = imgFilters.querySelector('#filter-new');
   var filterDiscussed = imgFilters.querySelector('#filter-discussed');
 
-  setTimeout(function () {
-    if (pictures.children.length >= 25) {
-      imgFilters.classList.remove('img-filters--inactive');
-    }
-  }, 700);
+  if (pictures.childNodes.length >= 5) {
+    imgFilters.classList.remove('img-filters--inactive');
+  }
 
   var currentFilter = 'popular';
   var filters = {
