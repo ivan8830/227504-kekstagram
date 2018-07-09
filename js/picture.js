@@ -45,11 +45,14 @@ window.picture = (function () {
   window.backend.load(loadHandler, showError);
 
   var imgFilters = document.querySelector('.img-filters');
-  imgFilters.classList.remove('img-filters--inactive');
   var imgFiltersButton = imgFilters.querySelectorAll('.img-filters__button');
   var filterPopular = imgFilters.querySelector('#filter-popular');
   var filterNew = imgFilters.querySelector('#filter-new');
   var filterDiscussed = imgFilters.querySelector('#filter-discussed');
+
+  if (pictures.childNodes.length >= 5) {
+    imgFilters.classList.remove('img-filters--inactive');
+  }
 
   var currentFilter = 'popular';
   var filters = {
@@ -80,7 +83,7 @@ window.picture = (function () {
     creatElements(photos);
   };
 
-  var debouncedApplyFilter = window.debounce(applyFilter, 1000);
+  var debouncedApplyFilter = window.debounce(applyFilter, 500);
 
   var setFilter = function (name) {
     return function () {

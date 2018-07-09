@@ -8,9 +8,32 @@ window.form = (function () {
   var imgUpload = document.querySelector('.img-upload__overlay');
   var currentEffect = 'none';
   var handlerRemovers = [];
+  var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+  var preview = imgUploadPreview.querySelector('img');
+  var effectsPreview = imgUpload.querySelectorAll('.effects__preview');
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   uploadFile.addEventListener('change', function () {
     open();
+    var file = uploadFile.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        preview.src = reader.result;
+        for (var i = 0; i < effectsPreview.length; i++) {
+          effectsPreview[i].style.backgroundImage = 'url(' + preview.src + ')';
+        }
+      });
+
+      reader.readAsDataURL(file);
+    }
   });
 
   var open = function () {
@@ -18,12 +41,11 @@ window.form = (function () {
     uploadFile.innerHTML = uploadFile.innerHTML;
     currentEffect = 'none';
     applyEffect();
-
     handlerRemovers.push(window.utils.addEventListener(hashTag, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(commentsText, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
-      if (evt.keyCode === window.utils.ESC_KEYCODE) {
-        evt.stopPropagation(close());
+      if (evt.keyCode === window.utils.ESC_KEYCODE && !evt.target.classList.contains('text__hashtags') && evt.target.tagName !== 'TEXTAREA') {
+        close();
       }
     }));
 
@@ -51,7 +73,6 @@ window.form = (function () {
   var resizePlus = resize.querySelector('.resize__control--plus');
   var resizeMinus = resize.querySelector('.resize__control--minus');
   var resizeValue = resize.querySelector('.resize__control--value');
-  var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
 
   resizePlus.addEventListener('click', function (evt) {
     if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.ENTER_KEYKODE)) {
@@ -236,6 +257,7 @@ window.form = (function () {
   });
 
   return {
-    upload: imgUpload
+    upload: imgUpload,
+    imgUploadPreview: imgUploadPreview
   };
 })();
