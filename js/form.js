@@ -44,7 +44,7 @@ window.form = (function () {
     handlerRemovers.push(window.utils.addEventListener(hashTag, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(commentsText, 'keydown', window.utils.blurAfterEsc));
     handlerRemovers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
-      if (evt.keyCode === window.utils.ESC_KEYCODE && !evt.target.classList.contains('text__hashtags') && evt.target.tagName !== 'TEXTAREA') {
+      if (evt.keyCode === window.utils.escCode && !evt.target.classList.contains('text__hashtags') && evt.target.tagName !== 'TEXTAREA') {
         close();
       }
     }));
@@ -75,14 +75,14 @@ window.form = (function () {
   var resizeValue = resize.querySelector('.resize__control--value');
 
   resizePlus.addEventListener('click', function (evt) {
-    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.ENTER_KEYKODE)) {
+    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.enterCode)) {
       resizeValue.value = Math.min(100, (parseInt(resizeValue.value, 10) + STEP_PLUS)) + '%';
       imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
     }
   });
 
   resizeMinus.addEventListener('click', function (evt) {
-    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.ENTER_KEYKODE)) {
+    if (evt.type === 'click' || (evt.type === 'keydown' && evt.keyCode === window.utils.enterCode)) {
       resizeValue.value = Math.max(25, (parseInt(resizeValue.value, 10) - STEP_MINUS)) + '%';
       imgUploadPreview.style.transform = 'scale(' + parseInt(resizeValue.value, 10) / 100 + ')';
     }
