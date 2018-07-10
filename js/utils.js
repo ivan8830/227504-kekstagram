@@ -1,6 +1,10 @@
 'use strict';
 
 window.utils = (function () {
+
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+
   var getRandomNumber = function (from, to) {
     return Math.floor((Math.random() * (to - from + 1)) + from);
   };
@@ -20,8 +24,8 @@ window.utils = (function () {
   };
 
   return {
-    ESC_KEYCODE: 27,
-    ENTER_KEYCODE: 13,
+    escCode: ESC_KEYCODE,
+    enterCode: ENTER_KEYCODE,
     getRandomNumber: getRandomNumber,
     addEventListener: addEventListener,
     blurAfterEsc: blurAfterEsc

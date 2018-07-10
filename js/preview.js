@@ -16,13 +16,13 @@ window.preview = (function () {
     userWindow.classList.remove('hidden');
     modalOpen.classList.add('modal-open');
     remveHandlers.push(window.utils.addEventListener(document, 'keydown', function (evt) {
-      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+      if (evt.keyCode === window.utils.escCode) {
         close();
       }
     }));
 
     remveHandlers.push(window.utils.addEventListener(bigPictureCancel, 'keydown', function (evt) {
-      if (evt.keyCode === window.utils.ENTER_KEYCODE) {
+      if (evt.keyCode === window.utils.enterCode) {
         close();
       }
     }));
