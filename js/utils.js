@@ -1,9 +1,9 @@
 'use strict';
 
 window.utils = (function () {
+
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
-
   var getRandomNumber = function (from, to) {
     return Math.floor((Math.random() * (to - from + 1)) + from);
   };
